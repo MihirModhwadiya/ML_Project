@@ -44,17 +44,12 @@ if __name__ == "__main__":
                 movi = tmp[0].lower().split()
                 if(movie.lower() in movi) and c==0:
                     movie_sugg.append(tmp[0].replace(" :", ":"))
-                    # print("sug1" + str(movie_sugg))
                 if(movie.lower() in movi) and c>0:
                     movie_sugg.append(tmp[0].replace(" :", ":"))
-                    # print("sug2" + str(movie_sugg))
-            # channel.send("did you mean: ", movie_sugg) if c<=1 else channel.send("No movie found")
             if movie_sugg != []:
                 await channel.send("did you mean: ")
-                movie_sugg_lst = movie_sugg
-                for i in movie_sugg_lst:
+                for i in movie_sugg:
                     await channel.send(i)
-                    # print(i)
             else:
                 await channel.send("No movie found")
             movie_sugg.clear()
@@ -66,16 +61,18 @@ if __name__ == "__main__":
         index = ds[(ds["title"].str.lower()) == movie.lower()].index[0]
 
         moviess = for_sugg["title"][index][1:]
+
+        rndm = [1,2,3,4,5,6]
+        #------ generate random numbers for random movies
+        '''
         rndm = []
         for i in range(0,5):
             rd = random.randint(1,10)
             rndm.append(rd if rd not in rndm else random.randint(1,10))
-        # print(rndm)
+        '''
+
         for i in rndm:
             index2 = ds[(ds["title"].str.lower()) == moviess[i].lower()].index[0]
-            # print("Movie Id:",ds.iloc[index2]["movie_id"])
-            # print("Movie Name:",moviess[i].replace(" :", ":"))
-            # print("Movie Overview:",ds_overview.iloc[index2]["overview"], end="\n\n")
             await channel.send("TMDB id: " + str(ds.iloc[index2]["movie_id"]))
             await (channel.send("Movie Name: " + str(moviess[i].replace(" :", ":"))))
             # await channel.send(ds_overview.iloc[index2]["overview"])
@@ -91,12 +88,10 @@ if __name__ == "__main__":
         print(msg_id[:11])
         if msg_id.startswith("$recommend") and len(msg_id) > 1:
             channel = message.channel
-            # await channel.send(message.content[11:])
             await recommend(message.content[11:], channel)
 
     try:
         client.run(token)
-        # print()
     except discord.HTTPException as e:
         print("error")
         if e.status == 429:
